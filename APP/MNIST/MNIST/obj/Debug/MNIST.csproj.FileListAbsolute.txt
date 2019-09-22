@@ -1,0 +1,13 @@
+D:\LearningC#\page\MNIST\MNIST\MNIST\bin\Debug\MNIST.exe.config
+D:\LearningC#\page\MNIST\MNIST\MNIST\bin\Debug\MNIST.exe
+D:\LearningC#\page\MNIST\MNIST\MNIST\bin\Debug\MNIST.pdb
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.csprojAssemblyReference.cache
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.Form1.resources
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.Properties.Resources.resources
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.csproj.GenerateResource.cache
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.csproj.CoreCompileInputs.cache
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.exe
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.pdb
+D:\LearningC#\page\MNIST\MNIST\MNIST\bin\Debug\MathNet.Numerics.dll
+D:\LearningC#\page\MNIST\MNIST\MNIST\bin\Debug\MathNet.Numerics.xml
+D:\LearningC#\page\MNIST\MNIST\MNIST\obj\Debug\MNIST.csproj.CopyComplete
