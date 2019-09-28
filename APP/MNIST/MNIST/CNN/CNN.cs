@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace MNIST.CNN
 {
-    class CNN
+    public class CNN
     {
         int numberHiddenLayer;
         double learningRate;
         string[] allLabel;
         Matrix<double> hWeightMatrix;
         Matrix<double> pOutputWeightMatrix;
+        Matrix<double> pBiasMatrix, biasMatrix;
 
         public CNN(int hiddenLayer,string[] allLabel,int dataLength,double learningRate)
         {
@@ -22,10 +23,15 @@ namespace MNIST.CNN
             this.learningRate = learningRate;
             this.allLabel = allLabel;
             hWeightMatrix = DenseMatrix.Create(this.numberHiddenLayer, dataLength, 0);
-            randomMatrix(hWeightMatrix);
+            //randomMatrix(hWeightMatrix);
 
             pOutputWeightMatrix = DenseMatrix.Create(this.allLabel.Length, this.numberHiddenLayer, 0);
-            randomMatrix(pOutputWeightMatrix);
+            //randomMatrix(pOutputWeightMatrix);
+
+
+            biasMatrix = createBias(this.numberHiddenLayer);
+
+            pBiasMatrix = createBias(this.allLabel.Length);
         }
 
 
@@ -53,8 +59,9 @@ namespace MNIST.CNN
             Matrix<double> pDeltasMatrix = dotMatrix(pDSigmoidMatrix, pSubtractMatrix);
 
             Matrix<double> pNewOutputWeightMatrix = pDeltasMatrix.TransposeAndMultiply(outputHiddenMatrix);
+            pNewOutputWeightMatrix = pNewOutputWeightMatrix.Multiply(learningRate);
             pNewOutputWeightMatrix = pOutputWeightMatrix.Subtract(pNewOutputWeightMatrix);
-
+            
             Matrix<double> transposePOutputWeightMatrix = pOutputWeightMatrix.Transpose();
 
             Matrix<double> newOutputMatrix = transposePOutputWeightMatrix.Multiply(pDeltasMatrix);
@@ -68,9 +75,13 @@ namespace MNIST.CNN
             Matrix<double> transposeData = data.Transpose();
 
             Matrix<double> newHMatrix = deltasMatrix.Multiply(transposeData);
+            Matrix<double> learningRageMatrix = newHMatrix.Multiply(learningRate);
+            Matrix<double> deltaToTagetMatrix = hWeightMatrix.Subtract(learningRageMatrix);
 
-            hWeightMatrix = newHMatrix;
-            pOutputWeightMatrix = pNewOutputWeightMatrix;
+
+
+            deltaToTagetMatrix.CopyTo(hWeightMatrix);
+            pNewOutputWeightMatrix.CopyTo(pOutputWeightMatrix);
         }
 
         public Matrix<double> dotMatrix(Matrix<double> matrix1,Matrix<double> matrix2)
@@ -125,19 +136,18 @@ namespace MNIST.CNN
         {
 
             Matrix<double> sumWeightIMatrix = hWeightMatrix.Multiply(data);
-            Matrix<double> biasMatrix = createBias(this.numberHiddenLayer);
             Matrix<double> netMatrix = sumWeightIMatrix.Add(biasMatrix);
             Matrix<double> outputMatrix = sigmoidMatrix(netMatrix);
 
             
             Matrix<double> sumWeightHMatrix = pOutputWeightMatrix.Multiply(outputMatrix);
-            Matrix<double> pBiasMatrix = createBias(this.allLabel.Length);
             Matrix<double> pNetMatrix = sumWeightHMatrix.Add(pBiasMatrix);
             Matrix<double> pOutputMatrix = sigmoidMatrix(pNetMatrix);
 
             double error = -1;
             pOutput = pOutputMatrix;
             output = outputMatrix;
+            string pString = answer(pOutput);
             if (conFunc(pOutputMatrix.Column(0).ToArray(), target, out error))
             {
                 return error;
@@ -151,13 +161,11 @@ namespace MNIST.CNN
         {
 
             Matrix<double> sumWeightIMatrix = hWeightMatrix.Multiply(data);
-            Matrix<double> biasMatrix = createBias(this.numberHiddenLayer);
             Matrix<double> netMatrix = sumWeightIMatrix.Add(biasMatrix);
             Matrix<double> outputMatrix = sigmoidMatrix(netMatrix);
 
 
             Matrix<double> sumWeightHMatrix = pOutputWeightMatrix.Multiply(outputMatrix);
-            Matrix<double> pBiasMatrix = createBias(this.allLabel.Length);
             Matrix<double> pNetMatrix = sumWeightHMatrix.Add(pBiasMatrix);
             Matrix<double> pOutputMatrix = sigmoidMatrix(pNetMatrix);
 
@@ -196,7 +204,7 @@ namespace MNIST.CNN
         public Matrix<double> createBias(int numberData,bool isRow = true)
         {
             double[] bias = createArrayRandom(numberData);
-            Matrix<double> biasMatrix = convertArrayToMatrix(bias);
+            Matrix<double> biasMatrix = convertArrayToMatrix(bias,isRow);
             return biasMatrix;
         }
 
@@ -207,7 +215,8 @@ namespace MNIST.CNN
             Random random = new Random();
             for (int i = 0; i < values.Length; i++)
             {
-                values[i] = random.NextDouble() * 2 - 1;
+                //values[i] = random.NextDouble() * 2 - 1;
+                values[i] = 0;
             }
             return values;
         }

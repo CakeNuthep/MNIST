@@ -84,8 +84,8 @@ namespace MNIST
                 
 
                 int[] flat = convertImageToFlatGrayScale(bitmap28_28);
-
-                Matrix<double> dataMatrix = cnn.convertArrayToMatrix(flat.Select(Convert.ToDouble).ToArray());
+                double[] flatDouble = nomalizeData(flat);
+                Matrix<double> dataMatrix = cnn.convertArrayToMatrix(flatDouble);
                 Matrix<double> pOutputMatrix = cnn.predict(dataMatrix);
                 string answer = cnn.answer(pOutputMatrix);
                 label_target.Text = answer;
@@ -171,33 +171,47 @@ namespace MNIST
                         ,textBox_pathTestFile.Text
                         ,textBox_pathTestLabelFile.Text);
                 }
-                foreach (var image in mnist.ReadTrainingData())
+
+                for (int numTrain = 0; numTrain <= 100; numTrain++)
                 {
-                    int labelDataSet = image.Label;
-                    double[] oneHotEncoding = convertLabelToOneHotEncoding(labelDataSet, allLabel.Length);
-                    byte[,] images = image.Data;
-                    int[] flat = Convert2ArrayTo1Array(images);
-                    double[] flatDouble = flat.Select(Convert.ToDouble).ToArray();
-                    cnn.train(flatDouble, oneHotEncoding);
-                    trainCount++;
-                    //MessageBox.Show(answer);
-                    #region test draw digit
-                    ////8 digit
-                    //int[] flat = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,43,47,47,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,108,249,253,253,208,207,207,207,149,65,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,184,254,253,253,253,254,253,253,253,254,253,213,25,0,0,0,0,0,0,0,0,0,0,0,0,0,55,203,254,254,199,127,127,60,93,84,68,151,222,254,161,0,0,0,0,0,0,0,0,0,0,0,0,0,138,253,253,199,19,0,0,0,0,0,0,0,155,253,211,0,0,0,0,0,0,0,0,0,0,0,0,0,138,253,253,17,0,0,0,0,0,0,0,74,241,253,211,0,0,0,0,0,0,0,0,0,0,0,0,0,105,253,253,102,0,0,0,0,0,0,34,229,253,253,160,0,0,0,0,0,0,0,0,0,0,0,0,0,0,149,254,229,40,0,0,0,38,153,254,254,254,180,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,198,254,207,9,34,72,235,253,253,224,139,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,211,253,215,240,254,253,234,128,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,229,253,253,253,228,77,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,70,170,254,254,254,254,254,254,119,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,130,230,254,253,253,185,115,64,211,253,248,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,166,232,253,253,247,162,46,13,7,91,245,253,254,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,253,253,253,210,93,127,159,204,253,253,253,228,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,134,241,254,255,254,254,254,254,254,254,228,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,115,140,206,206,206,207,206,123,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-                    //};
-                    //int[] flat = convertImageToFlatGrayScale(bitmap28_28);
-                    //Bitmap img;
-                    //if (convertFlatToImage(flat, 28, 28, out img))
-                    //{
-                    //    pictureBox_draw.Image = new Bitmap(img, new Size(pictureBox_draw.Width, pictureBox_draw.Height));
-                    //}
-                    #endregion
-                    //break;
+                    foreach (var image in mnist.ReadTrainingData())
+                    {
+                        int labelDataSet = image.Label;
+                        double[] oneHotEncoding = convertLabelToOneHotEncoding(labelDataSet, allLabel.Length);
+                        byte[,] images = image.Data;
+                        int[] flat = Convert2ArrayTo1Array(images);
+                        double[] flatDouble = nomalizeData(flat);
+                        //double[] flatDouble = flat.Select(Convert.ToDouble).ToArray();
+                        cnn.train(flatDouble, oneHotEncoding);
+                        trainCount++;
+                        //MessageBox.Show(answer);
+                        #region test draw digit
+                        ////8 digit
+                        //int[] flat = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,43,47,47,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,108,249,253,253,208,207,207,207,149,65,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,184,254,253,253,253,254,253,253,253,254,253,213,25,0,0,0,0,0,0,0,0,0,0,0,0,0,55,203,254,254,199,127,127,60,93,84,68,151,222,254,161,0,0,0,0,0,0,0,0,0,0,0,0,0,138,253,253,199,19,0,0,0,0,0,0,0,155,253,211,0,0,0,0,0,0,0,0,0,0,0,0,0,138,253,253,17,0,0,0,0,0,0,0,74,241,253,211,0,0,0,0,0,0,0,0,0,0,0,0,0,105,253,253,102,0,0,0,0,0,0,34,229,253,253,160,0,0,0,0,0,0,0,0,0,0,0,0,0,0,149,254,229,40,0,0,0,38,153,254,254,254,180,25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,19,198,254,207,9,34,72,235,253,253,224,139,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,211,253,215,240,254,253,234,128,17,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,102,229,253,253,253,228,77,13,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,70,170,254,254,254,254,254,254,119,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,26,130,230,254,253,253,185,115,64,211,253,248,21,0,0,0,0,0,0,0,0,0,0,0,0,0,0,166,232,253,253,247,162,46,13,7,91,245,253,254,56,0,0,0,0,0,0,0,0,0,0,0,0,0,0,128,253,253,253,210,93,127,159,204,253,253,253,228,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,134,241,254,255,254,254,254,254,254,254,228,34,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,115,140,206,206,206,207,206,123,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+                        //};
+                        //int[] flat = convertImageToFlatGrayScale(bitmap28_28);
+                        //Bitmap img;
+                        //if (convertFlatToImage(flat, 28, 28, out img))
+                        //{
+                        //    pictureBox_draw.Image = new Bitmap(img, new Size(pictureBox_draw.Width, pictureBox_draw.Height));
+                        //}
+                        #endregion
+                        //break;
+                    }
                 }
                 MessageBox.Show("Train finish "+trainCount);
             }
         }
 
+        public double[] nomalizeData(int[] data)
+        {
+            double[] result = new double[data.Length];
+            for(int i=0;i<data.Length;i++)
+            {
+                result[i] = data[i] / 127.0 - 1.0; 
+            }
+            return result;
+        }
         public double[] convertLabelToOneHotEncoding(int label, int length)
         {
             double[] oneHotEncoding = new double[length];
@@ -234,7 +248,8 @@ namespace MNIST
                         double[] oneHotEncoding = convertLabelToOneHotEncoding(labelDataSet, allLabel.Length);
                         byte[,] images = image.Data;
                         int[] flat = Convert2ArrayTo1Array(images);
-                        double[] flatDouble = flat.Select(Convert.ToDouble).ToArray();
+                        double[] flatDouble = nomalizeData(flat);
+                        //double[] flatDouble = flat.Select(Convert.ToDouble).ToArray();
 
                         Bitmap bmp;
                         if (convertFlatToImage(flat, 28, 28, out bmp))
